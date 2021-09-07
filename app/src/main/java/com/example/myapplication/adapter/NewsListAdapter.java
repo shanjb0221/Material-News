@@ -4,10 +4,6 @@ package com.example.myapplication.adapter;
  * https://blog.csdn.net/zk1382091/article/details/89462395
  */
 
-import com.example.myapplication.bean.NewsBean;
-import com.example.myapplication.databinding.ItemCardBinding;
-import com.example.myapplication.databinding.ItemLoaderBinding;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,11 +12,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewbinding.ViewBinding;
+
+import com.example.myapplication.bean.NewsBean;
+import com.example.myapplication.databinding.ItemCardBinding;
+import com.example.myapplication.databinding.ItemLoaderBinding;
 
 import java.util.List;
 
-public class ListRefreshAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int TYPE_ITEM = 0;
     public static final int TYPE_FOOTER = 1;
@@ -28,8 +27,15 @@ public class ListRefreshAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int IDLE = 0;
     public static final int LOADING = 1;
     public static final int NO_MORE = 2;
-
+    private final Context context;
+    private final LayoutInflater inflater;
     private int loaderStatus = IDLE;
+    private List<NewsBean> items;
+    public NewsListAdapter(Context context, LayoutInflater inflater, List<NewsBean> items) {
+        this.context = context;
+        this.inflater = inflater;
+        this.items = items;
+    }
 
     public int getLoaderStatus() {
         return loaderStatus;
@@ -38,16 +44,6 @@ public class ListRefreshAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void setLoaderStatus(int status) {
         loaderStatus = status;
         notifyItemChanged(items.size());
-    }
-
-    private final Context context;
-    private final LayoutInflater inflater;
-    private List<NewsBean> items;
-
-    public ListRefreshAdapter(Context context, LayoutInflater inflater, List<NewsBean> items) {
-        this.context = context;
-        this.inflater = inflater;
-        this.items = items;
     }
 
     @NonNull
@@ -93,15 +89,6 @@ public class ListRefreshAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         return position == items.size() ? TYPE_FOOTER : TYPE_ITEM;
-    }
-
-    private static class BindingViewHolder<T extends ViewBinding> extends RecyclerView.ViewHolder {
-        T B;
-
-        public BindingViewHolder(T B) {
-            super(B.getRoot());
-            this.B = B;
-        }
     }
 
     public void appendItemsToBack(List<NewsBean> items) {

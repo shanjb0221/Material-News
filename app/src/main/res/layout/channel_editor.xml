@@ -4,39 +4,30 @@
     android:id="@+id/bottomSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bottom_sheets_background"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
+
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:orientation="vertical">
 
         <Button
-            android:layout_width="match_parent"
+            android:id="@+id/closeButton"
+            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="第一" />
+            android:layout_gravity="right"
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="第二" />
+            app:icon="@drawable/ic_close_24" />
 
-        <Button
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/editorView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="第三" />
+            android:layout_height="match_parent"
+            android:padding="12dp" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="第四" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

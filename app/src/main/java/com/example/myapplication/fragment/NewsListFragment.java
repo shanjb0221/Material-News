@@ -1,18 +1,17 @@
 package com.example.myapplication.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.myapplication.adapter.ListRefreshAdapter;
+import com.example.myapplication.adapter.NewsListAdapter;
 import com.example.myapplication.bean.NewsBean;
 import com.example.myapplication.databinding.FragmentNewsListBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -29,7 +28,7 @@ public class NewsListFragment extends Fragment {
 
     private FragmentNewsListBinding B;
 
-    private ListRefreshAdapter adapter;
+    private NewsListAdapter adapter;
     private LinearLayoutManager manager;
 
     public FragmentNewsListBinding getBinding() {
@@ -69,7 +68,7 @@ public class NewsListFragment extends Fragment {
                 }
 
                 adapter.appendItemsToBack(items);
-                adapter.setLoaderStatus(ListRefreshAdapter.IDLE);
+                adapter.setLoaderStatus(NewsListAdapter.IDLE);
                 Snackbar.make(B.getRoot(), "更新了 " + items.size() + " 条", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         }, 2000);
@@ -91,7 +90,7 @@ public class NewsListFragment extends Fragment {
                 item.setTitle("NewsItem #" + i);
                 items.add(item);
             }
-            adapter = new ListRefreshAdapter(this.getContext(), getLayoutInflater(), items);
+            adapter = new NewsListAdapter(this.getContext(), getLayoutInflater(), items);
             manager = new LinearLayoutManager(this.getContext());
             B.recyclerView.setAdapter(adapter);
             B.recyclerView.setLayoutManager(manager);
@@ -114,8 +113,8 @@ public class NewsListFragment extends Fragment {
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE &&
                         lastVisibleItem + 1 == adapter.getItemCount() &&
-                        adapter.getLoaderStatus() == ListRefreshAdapter.IDLE) {
-                    adapter.setLoaderStatus(ListRefreshAdapter.LOADING);
+                        adapter.getLoaderStatus() == NewsListAdapter.IDLE) {
+                    adapter.setLoaderStatus(NewsListAdapter.LOADING);
                     loadMore();
                 }
             }

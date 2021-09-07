@@ -32,4 +32,6 @@
     <string name="menu_refresh">刷新</string>
     <string name="history">历史记录</string>
     <string name="edit_channel">频道管理</string>
+    <string name="channel_remove">移除</string>
+    <string name="channel_add">添加</string>
 </resources>

@@ -40,12 +40,4 @@
         <item name="cornerRadius">0dp</item>
     </style>
 
-    <style name="TransparentBottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/SheetStyle</item>
-    </style>
-
-    <style name="SheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_sheets_background</item>
-    </style>
-
 </resources>

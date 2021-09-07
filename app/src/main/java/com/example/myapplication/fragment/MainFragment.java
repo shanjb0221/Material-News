@@ -6,44 +6,51 @@ import static com.example.myapplication.R.id.menu_history;
 import static com.example.myapplication.R.id.menu_refresh;
 import static com.example.myapplication.R.id.menu_search;
 import static com.example.myapplication.R.id.menu_star;
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.DemoCollectionPagerAdapter;
-import com.example.myapplication.databinding.FragmentEditChannelBinding;
+import com.example.myapplication.channel_editor.ChannelAdapter;
+import com.example.myapplication.channel_editor.ChannelEntity;
+import com.example.myapplication.channel_editor.ItemDragHelperCallback;
+import com.example.myapplication.databinding.ChannelEditorBinding;
 import com.example.myapplication.databinding.FragmentMainBinding;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainFragment extends Fragment {
 
+    private final int MODE_BUTTON = 0;
+    private final int MODE_NAVIGATION_VIEW = 1;
+    private final int MODE_TOP_APP_BAR = 2;
     String TAG = "MainFragment";
-
+    List<ChannelEntity> mineChannels, otherChannels;
     private FragmentMainBinding B;
-    private FragmentEditChannelBinding eB;
+    private ChannelEditorBinding eB;
     private NavController nav;
     private BottomSheetDialog bottomSheetDialog;
+    private ChannelAdapter channelAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,24 +63,52 @@ public class MainFragment extends Fragment {
         if (B == null) {
             B = FragmentMainBinding.inflate(inflater, container, false);
             nav = NavHostFragment.findNavController(this);
-            eB = FragmentEditChannelBinding.inflate(inflater, container, false);
+            eB = ChannelEditorBinding.inflate(inflater, container, false);
             setupTopAppBar();
             setupNavigationView();
             setupViewPager();
-            bottomSheetDialog = new BottomSheetDialog(getContext());
-            bottomSheetDialog.setContentView(eB.getRoot());
-            bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                }
-            });
+            setupBottomSheetDialog();
         }
         return B.getRoot();
     }
 
-    private final int MODE_BUTTON = 0;
-    private final int MODE_NAVIGATION_VIEW = 1;
-    private final int MODE_TOP_APP_BAR = 2;
+    private void setupBottomSheetDialog() {
+        bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(eB.getRoot());
+        eB.closeButton.setOnClickListener(view -> bottomSheetDialog.cancel());
+        bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+            }
+        });
+
+        mineChannels = new ArrayList<>();
+        otherChannels = new ArrayList<>();
+        for (int i = 0; i < 10; ++i)
+            mineChannels.add(new ChannelEntity("频道" + i));
+        for (int i = 0; i < 20; ++i)
+            otherChannels.add(new ChannelEntity("其他" + i));
+
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
+        eB.editorView.setLayoutManager(manager);
+
+        ItemDragHelperCallback callback = new ItemDragHelperCallback();
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(eB.editorView);
+
+        channelAdapter = new ChannelAdapter(getContext(), helper, mineChannels, otherChannels);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return (channelAdapter.getItemViewType(position) & ChannelAdapter.ITEM) == 1 ? 1 : 4;
+            }
+        });
+        eB.editorView.setAdapter(channelAdapter);
+
+        channelAdapter.setOnMyChannelItemClickListener((view, position) -> {
+            Snackbar.make(B.coordinatorLayout, "Channel: " + mineChannels.get(position).getName(), BaseTransientBottomBar.LENGTH_SHORT).show();
+        });
+    }
 
     private void setupViewPager() {
         B.editChannelButton.setOnClickListener(view -> navigateTo(menu_editChannel, MODE_BUTTON));
