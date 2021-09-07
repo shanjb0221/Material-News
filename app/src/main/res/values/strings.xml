@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Material News</string>
+    <string name="button1">Button1</string>
+    <string name="button2">Button2</string>
+    <string name="star">收藏</string>
+    <string name="content_description_star">收藏</string>
+    <string name="menu_search">搜索</string>
+    <string name="content_description_search">搜索</string>
+    <string name="about">关于</string>
+    <string name="style">Styled by Material Design</string>
+    <string name="content_description_about">关于</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="editChannel">修改频道</string>
+    <string name="link">WEBSITE</string>
+    <string name="menu_refresh">刷新</string>
+    <string name="history">历史记录</string>
+    <string name="edit_channel">频道管理</string>
+</resources>

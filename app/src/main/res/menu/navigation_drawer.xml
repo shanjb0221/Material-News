@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search_24"
+        android:title="@string/menu_search" />
+    <item
+        android:id="@+id/menu_editChannel"
+        android:icon="@drawable/ic_playlist_add_24"
+        android:title="@string/edit_channel" />
+
+    <item
+        android:id="@+id/menu_star"
+        android:icon="@drawable/ic_star_24"
+        android:title="@string/star" />
+    <item
+        android:id="@+id/menu_history"
+        android:icon="@drawable/ic_history_24"
+        android:title="@string/history" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_info_24"
+        android:title="@string/about" />
+</menu>
