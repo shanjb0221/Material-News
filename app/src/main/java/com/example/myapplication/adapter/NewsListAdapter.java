@@ -31,6 +31,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final LayoutInflater inflater;
     private int loaderStatus = IDLE;
     private List<NewsBean> items;
+
     public NewsListAdapter(Context context, LayoutInflater inflater, List<NewsBean> items) {
         this.context = context;
         this.inflater = inflater;
