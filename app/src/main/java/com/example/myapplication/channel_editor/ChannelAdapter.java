@@ -349,8 +349,8 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageView addMirrorView(ViewGroup parent, RecyclerView recyclerView, View view) {
-        /**
-         * 我们要获取cache首先要通过setDrawingCacheEnable方法开启cache，然后再调用getDrawingCache方法就可以获得view的cache图片了。
+        /*
+          我们要获取cache首先要通过setDrawingCacheEnable方法开启cache，然后再调用getDrawingCache方法就可以获得view的cache图片了。
          buildDrawingCache方法可以不用调用，因为调用getDrawingCache方法时，若果cache没有建立，系统会自动调用buildDrawingCache方法生成cache。
          若想更新cache, 必须要调用destoryDrawingCache方法把旧的cache销毁，才能建立新的。
          当调用setDrawingCacheEnabled方法设置为false, 系统也会自动把原来的cache销毁。
@@ -368,6 +368,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight());
         params.setMargins(locations[0], locations[1] - parenLocations[1], 0, 0);
         parent.addView(mirrorView, params);
+        mirrorView.setElevation(100f);
 
         return mirrorView;
     }
@@ -423,7 +424,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Animation.RELATIVE_TO_SELF, 0f,
                 Animation.ABSOLUTE, dY);
         // RecyclerView 默认移动动画 250ms 这里设置 360ms 是为了防止在位移动画结束后 remove(view)过早 导致闪烁
-        translateAnimation.setDuration(ANIM_TIME);
+        translateAnimation.setDuration(420);
         translateAnimation.setFillAfter(true);
         return translateAnimation;
     }

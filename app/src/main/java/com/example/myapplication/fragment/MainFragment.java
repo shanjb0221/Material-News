@@ -7,7 +7,6 @@ import static com.example.myapplication.R.id.menu_refresh;
 import static com.example.myapplication.R.id.menu_search;
 import static com.example.myapplication.R.id.menu_star;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
@@ -25,13 +25,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adapter.DemoCollectionPagerAdapter;
+import com.example.myapplication.adapter.ChannelPagerAdapter;
 import com.example.myapplication.channel_editor.ChannelAdapter;
 import com.example.myapplication.channel_editor.ChannelEntity;
 import com.example.myapplication.channel_editor.ItemDragHelperCallback;
-import com.example.myapplication.databinding.ChannelEditorBinding;
 import com.example.myapplication.databinding.FragmentMainBinding;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -47,10 +46,9 @@ public class MainFragment extends Fragment {
     String TAG = "MainFragment";
     List<ChannelEntity> mineChannels, otherChannels;
     private FragmentMainBinding B;
-    private ChannelEditorBinding eB;
     private NavController nav;
-    private BottomSheetDialog bottomSheetDialog;
     private ChannelAdapter channelAdapter;
+    private BottomSheetBehavior<LinearLayout> behavior;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,24 +61,23 @@ public class MainFragment extends Fragment {
         if (B == null) {
             B = FragmentMainBinding.inflate(inflater, container, false);
             nav = NavHostFragment.findNavController(this);
-            eB = ChannelEditorBinding.inflate(inflater, container, false);
             setupTopAppBar();
             setupNavigationView();
             setupViewPager();
-            setupBottomSheetDialog();
+            setupBottomSheet();
         }
         return B.getRoot();
     }
 
-    private void setupBottomSheetDialog() {
-        bottomSheetDialog = new BottomSheetDialog(getContext());
-        bottomSheetDialog.setContentView(eB.getRoot());
-        eB.closeButton.setOnClickListener(view -> bottomSheetDialog.cancel());
-        bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+    private void setupBottomSheet() {
+        behavior = BottomSheetBehavior.from(B.channelEditor.bottomSheet);
+        B.channelEditor.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDismiss(DialogInterface dialogInterface) {
+            public void onClick(View view) {
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
+
 
         mineChannels = new ArrayList<>();
         otherChannels = new ArrayList<>();
@@ -90,11 +87,11 @@ public class MainFragment extends Fragment {
             otherChannels.add(new ChannelEntity("其他" + i));
 
         GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
-        eB.editorView.setLayoutManager(manager);
+        B.channelEditor.editorView.setLayoutManager(manager);
 
         ItemDragHelperCallback callback = new ItemDragHelperCallback();
         ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(eB.editorView);
+        helper.attachToRecyclerView(B.channelEditor.editorView);
 
         channelAdapter = new ChannelAdapter(getContext(), helper, mineChannels, otherChannels);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -103,7 +100,7 @@ public class MainFragment extends Fragment {
                 return (channelAdapter.getItemViewType(position) & ChannelAdapter.ITEM) == 1 ? 1 : 4;
             }
         });
-        eB.editorView.setAdapter(channelAdapter);
+        B.channelEditor.editorView.setAdapter(channelAdapter);
 
         channelAdapter.setOnMyChannelItemClickListener((view, position) -> {
             Snackbar.make(B.coordinatorLayout, "Channel: " + mineChannels.get(position).getName(), BaseTransientBottomBar.LENGTH_SHORT).show();
@@ -112,7 +109,7 @@ public class MainFragment extends Fragment {
 
     private void setupViewPager() {
         B.editChannelButton.setOnClickListener(view -> navigateTo(menu_editChannel, MODE_BUTTON));
-        B.viewPager.setAdapter(new DemoCollectionPagerAdapter(this));
+        B.viewPager.setAdapter(new ChannelPagerAdapter(this));
         new TabLayoutMediator(B.tabLayout, B.viewPager, (tab, position) -> tab.setText("item #" + position)).attach();
     }
 
@@ -129,7 +126,7 @@ public class MainFragment extends Fragment {
             return true;
         }
         if (destination == menu_editChannel) {
-            bottomSheetDialog.show();
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return true;
         }
         if (destination == menu_star) {

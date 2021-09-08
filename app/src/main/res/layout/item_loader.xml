@@ -9,10 +9,12 @@
 
     <ProgressBar
         android:id="@+id/loaderProgressBar"
+        style=""
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="12dp"
         android:indeterminate="false"
+        android:indeterminateTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/loaderTextView"
         app:layout_constraintTop_toTopOf="parent" />

@@ -40,4 +40,9 @@
         <item name="cornerRadius">0dp</item>
     </style>
 
+    <style name="Widget.App.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/outlined_button_background</item>
+    </style>
+
+
 </resources>

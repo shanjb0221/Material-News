@@ -12,11 +12,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.myapplication.fragment.DemoObjectFragment;
 import com.example.myapplication.fragment.NewsListFragment;
 
-public class DemoCollectionPagerAdapter extends FragmentStateAdapter {
+public class ChannelPagerAdapter extends FragmentStateAdapter {
 
     private String TAG = "CollectionDemoFragment";
 
-    public DemoCollectionPagerAdapter(@NonNull Fragment fragment) {
+    public ChannelPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
     }
 
