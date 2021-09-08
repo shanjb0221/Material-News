@@ -33,7 +33,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
         // 不同Type之间不可移动
         Log.e("Test", target.getItemViewType() + "");
         if (viewHolder.getItemViewType() != target.getItemViewType()) {
-            if (recyclerView.getAdapter() instanceof OnItemMoveListener && target.getItemViewType() == ChannelAdapter.TYPE_ITEM_OTHER) {
+            if (recyclerView.getAdapter() instanceof OnItemMoveListener && target.getItemViewType() == ChannelEditAdapter.TYPE_ITEM_OTHER) {
                 OnItemMoveListener listener = ((OnItemMoveListener) recyclerView.getAdapter());
                 listener.onChangeItem();
             }

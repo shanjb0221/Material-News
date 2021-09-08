@@ -6,11 +6,17 @@ package com.example.myapplication.channel_editor;
  */
 public class ChannelEntity {
 
+    private final boolean removable;
     private long id;
     private String name;
 
     public ChannelEntity(String name) {
+        this(name, true);
+    }
+
+    public ChannelEntity(String name, boolean removable) {
         this.name = name;
+        this.removable = removable;
     }
 
     public long getId() {
@@ -27,5 +33,9 @@ public class ChannelEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getRemovable() {
+        return removable;
     }
 }
