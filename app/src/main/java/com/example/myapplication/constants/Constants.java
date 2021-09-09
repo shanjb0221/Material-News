@@ -19,4 +19,6 @@ public class Constants {
             new ChannelEntity("科技"),
             new ChannelEntity("社会"));
 
+    public static String baseURL = "https://api2.newsminer.net/";
+    public static int pageSize = 25;
 }

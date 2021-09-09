@@ -25,7 +25,7 @@ public class ChannelPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Fragment res = new NewsListFragment();
+        Fragment res = new NewsListFragment(channels.get(position).getName());
         Bundle args = new Bundle();
         args.putInt(DemoObjectFragment.ARG_OBJECT, position);
         res.setArguments(args);
