@@ -63,6 +63,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final RecyclerView parent;
     private final GridLayoutManager manager;
     private final int spanCount;
+    private int fixedChannels; // 固定的频道数（首页）
     private boolean isEditing = false;
     private BindingViewHolder<ChannelItemMineBinding> curViewHolder;
     private long startTime;
@@ -77,12 +78,18 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mine = mine;
         this.other = other;
         this.manager = manager;
+        this.fixedChannels = 0;
         this.spanCount = manager.getSpanCount();
+    }
+
+    private int sizeMine() {
+        return mine.size() - fixedChannels;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position <= mine.size() ? MINE : OTHER) | (position == 0 || position == mine.size() + 1 ? HEADER : ITEM);
+        return (position <= sizeMine() ? MINE : OTHER)
+                | (position == 0 || position == sizeMine() + 1 ? HEADER : ITEM);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -105,7 +112,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if (isEditing)
                         moveItemMine(itemMineHolder);
                     else
-                        itemClickListener.onItemClick(itemMineHolder.B.getRoot(), itemMineHolder.getAdapterPosition() - 1);
+                        itemClickListener.onItemClick(itemMineHolder.B.getRoot(), itemMineHolder.getAdapterPosition() - 1 + fixedChannels);
                 });
                 itemMineHolder.B.text.setOnLongClickListener(view -> {
                     if (!isEditing)
@@ -151,15 +158,15 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         View dstView;
         float dstX, dstY;
         if (other.size() == 0) {                            // case 1: 其它频道为空
-            dstView = manager.findViewByPosition(mine.size() + 1);
+            dstView = manager.findViewByPosition(sizeMine() + 1);
             assert dstView != null;
             dstX = dstView.getLeft();
             dstY = dstView.getBottom();
         } else {
-            if ((mine.size() - 1) % spanCount == 0) {      // case 2: 我的频道最后一行仅有一个元素，移动后减少一行
-                dstView = manager.findViewByPosition(mine.size() + 1);
+            if ((sizeMine() - 1) % spanCount == 0) {      // case 2: 我的频道最后一行仅有一个元素，移动后减少一行
+                dstView = manager.findViewByPosition(sizeMine() + 1);
             } else {                                        // case 3: default
-                dstView = manager.findViewByPosition(mine.size() + 2);
+                dstView = manager.findViewByPosition(sizeMine() + 2);
             }
             assert dstView != null;
             dstX = dstView.getLeft();
@@ -180,13 +187,13 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         View srcView = manager.findViewByPosition(position);
         View dstView;
         float dstX, dstY;
-        if (mine.size() % spanCount == 0) {
-            dstView = manager.findViewByPosition(mine.size() + 1);
+        if (sizeMine() % spanCount == 0) {
+            dstView = manager.findViewByPosition(sizeMine() + 1);
             assert dstView != null;
             dstX = dstView.getLeft();
             dstY = dstView.getTop();
         } else {
-            dstView = manager.findViewByPosition(mine.size());
+            dstView = manager.findViewByPosition(sizeMine());
             assert dstView != null;
             dstX = dstView.getRight();
             dstY = dstView.getTop();
@@ -200,8 +207,8 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             // 则 需要延迟250ms notifyItemMove , 这是因为这种情况 , 并不触发ItemAnimator , 会直接刷新界面
             // 导致我们的位移动画刚开始, 就已经 notify 完毕, 引起不同步问题
             if (position == manager.findLastVisibleItemPosition()
-                    && (position - mine.size() - 2) % spanCount != 0
-                    && mine.size() % spanCount != 0) {
+                    && (position - sizeMine() - 2) % spanCount != 0
+                    && sizeMine() % spanCount != 0) {
                 moveOtherToMineWithDelay(holder);
             } else {
                 moveOtherToMine(holder);
@@ -226,7 +233,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (h.B instanceof ChannelItemMineBinding) {
             ChannelItemMineBinding b = (ChannelItemMineBinding) h.B;
             b.removeIcon.setVisibility(isEditing ? View.VISIBLE : View.GONE);
-            b.text.setText(mine.get(position - 1).getName());
+            b.text.setText(mine.get(position - 1 + fixedChannels).getName());
             shakeView(b.channelItemMine, isEditing);
             return;
         }
@@ -235,13 +242,13 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         if (h.B instanceof ChannelItemOtherBinding) {
             ChannelItemOtherBinding b = (ChannelItemOtherBinding) h.B;
-            b.text.setText(other.get(position - mine.size() - 2).getName());
+            b.text.setText(other.get(position - sizeMine() - 2).getName());
         }
     }
 
     @Override
     public int getItemCount() {
-        return mine.size() + other.size() + 2;
+        return sizeMine() + other.size() + 2;
     }
 
 
@@ -288,35 +295,37 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void moveMineToOther(BindingViewHolder<ChannelItemMineBinding> holder) {
         int position = holder.getAdapterPosition();
-        int index = position - 1;
-        assert 0 <= index && index < mine.size();
+        int index = position - 1 + fixedChannels;
+        assert fixedChannels <= index && index < mine.size();
         ChannelEntity item = mine.get(index);
         mine.remove(index);
         other.add(0, item);
-        notifyItemMoved(position, mine.size() + 2);
-        if (channelPagerAdapter != null) channelPagerAdapter.notifyItemRemoved(index);
+        notifyItemMoved(position, sizeMine() + 2);
+        if (channelPagerAdapter != null)
+            channelPagerAdapter.notifyItemRemoved(index);
         if (datasetChangedListener != null) datasetChangedListener.onDatasetChanged();
     }
 
     private void moveOtherToMine(BindingViewHolder<ChannelItemOtherBinding> holder) {
         int position = processItemRemoveAdd(holder);
-        notifyItemMoved(position, mine.size());
+        notifyItemMoved(position, sizeMine());
     }
 
     private void moveOtherToMineWithDelay(BindingViewHolder<ChannelItemOtherBinding> holder) {
         final int position = processItemRemoveAdd(holder);
-        delayHandler.postDelayed(() -> notifyItemMoved(position, mine.size()), ANIM_DELAY);
+        delayHandler.postDelayed(() -> notifyItemMoved(position, sizeMine()), ANIM_DELAY);
     }
 
     private int processItemRemoveAdd(BindingViewHolder<ChannelItemOtherBinding> holder) {
         int position = holder.getAdapterPosition();
 
-        int index = position - mine.size() - 2;
+        int index = position - sizeMine() - 2;
         assert 0 <= index && index < other.size();
         ChannelEntity item = other.get(index);
         other.remove(index);
         mine.add(item);
-        if (channelPagerAdapter != null) channelPagerAdapter.notifyItemInserted(mine.size() - 1);
+        if (channelPagerAdapter != null)
+            channelPagerAdapter.notifyItemInserted(mine.size() - 1);
         if (datasetChangedListener != null) datasetChangedListener.onDatasetChanged();
         return position;
     }
@@ -349,14 +358,14 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void resetEditingMode() {
         if (isEditing) {
             isEditing = false;
-            notifyItemRangeChanged(0, mine.size());
+            notifyItemRangeChanged(0, sizeMine());
         }
     }
 
     private void changeEditingMode() {
         isEditing = !isEditing;
         /* NOTE
-         * - notifyItemRangeChanged(0, mine.size()); doesn't work
+         * - notifyItemRangeChanged(0, mineSize()); doesn't work
          */
         int visibleChildCount = parent.getChildCount();
         for (int i = 0; i < visibleChildCount; i++) {
@@ -417,12 +426,13 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        int fromIndex = fromPosition - 1, toIndex = toPosition - 1;
+        int fromIndex = fromPosition - 1 + fixedChannels, toIndex = toPosition - 1 + fixedChannels;
         ChannelEntity item = mine.get(fromIndex);
         mine.remove(fromIndex);
         mine.add(toIndex, item);
         notifyItemMoved(fromPosition, toPosition);
-        if (channelPagerAdapter != null) channelPagerAdapter.notifyItemMoved(fromIndex, toIndex);
+        if (channelPagerAdapter != null)
+            channelPagerAdapter.notifyItemMoved(fromIndex, toIndex);
         if (datasetChangedListener != null) datasetChangedListener.onDatasetChanged();
     }
 
@@ -435,7 +445,8 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.itemClickListener = listener;
     }
 
-    public void setChannelPagerAdapter(ChannelPagerAdapter channelPagerAdapter) {
+    public void setChannelPagerAdapter(ChannelPagerAdapter channelPagerAdapter, int fixedChannels) {
+        this.fixedChannels = fixedChannels;
         this.channelPagerAdapter = channelPagerAdapter;
     }
 

@@ -42,8 +42,12 @@ public class MainFragment extends Fragment {
     private final int MODE_BUTTON = 0;
     private final int MODE_NAVIGATION_VIEW = 1;
     private final int MODE_TOP_APP_BAR = 2;
+    private final int FIXED = -1;
+    private final int MINE = 0;
+    private final int OTHER = 1;
     SharedPreferences channelSettings;
     List<ChannelEntity> mineChannels, otherChannels;
+    int fixedChannels;
     private FragmentMainBinding B;
     private NavController nav;
     private ChannelPager channelPager;
@@ -75,7 +79,7 @@ public class MainFragment extends Fragment {
         channelEditor.getAdapter().setOnMyChannelItemClickListener((view, position) -> {
             Snackbar.make(B.coordinatorLayout, "Channel: " + mineChannels.get(position).getName(), BaseTransientBottomBar.LENGTH_SHORT).show();
         });
-        channelEditor.getAdapter().setChannelPagerAdapter(channelPager.getAdapter());
+        channelEditor.getAdapter().setChannelPagerAdapter(channelPager.getAdapter(), fixedChannels);
         channelEditor.getAdapter().setOnDatasetChangedListener(this::saveChannels);
     }
 
@@ -157,10 +161,17 @@ public class MainFragment extends Fragment {
     }
 
     private void loadChannels() {
+        fixedChannels = 0;
         mineChannels = new ArrayList<>();
         otherChannels = new ArrayList<>();
+        for (ChannelEntity channel : Constants.allChannels)
+            if (channel.isFixed()) {
+                mineChannels.add(channel);
+                ++fixedChannels;
+            }
         for (ChannelEntity channel : Constants.allChannels) {
-            if (!channel.getRemovable() || channelSettings.getBoolean(channel.getName(), false))
+            if (channel.isFixed()) continue;
+            if (channelSettings.getBoolean(channel.getName(), false))
                 mineChannels.add(channel);
             else
                 otherChannels.add(channel);

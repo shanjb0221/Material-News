@@ -6,17 +6,17 @@ package com.example.myapplication.channel_editor;
  */
 public class ChannelEntity {
 
-    private final boolean removable;
+    private final boolean fixed;
     private long id;
     private String name;
 
     public ChannelEntity(String name) {
-        this(name, true);
+        this(name, false);
     }
 
-    public ChannelEntity(String name, boolean removable) {
+    public ChannelEntity(String name, boolean fixed) {
         this.name = name;
-        this.removable = removable;
+        this.fixed = fixed;
     }
 
     public long getId() {
@@ -35,7 +35,7 @@ public class ChannelEntity {
         this.name = name;
     }
 
-    public boolean getRemovable() {
-        return removable;
+    public boolean isFixed() {
+        return fixed;
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Constants {
     public final static List<ChannelEntity> allChannels = Arrays.asList(
-            new ChannelEntity("全部", false),
+            new ChannelEntity("全部", true),
             new ChannelEntity("娱乐"),
             new ChannelEntity("军事"),
             new ChannelEntity("教育"),
