@@ -1,37 +1,39 @@
 <resources>
     <string name="app_name">Material News</string>
-    <string name="button1">Button1</string>
-    <string name="button2">Button2</string>
-    <string name="star">收藏</string>
-    <string name="content_description_star">收藏</string>
+
     <string name="menu_search">搜索</string>
-    <string name="content_description_search">搜索</string>
-    <string name="about">关于</string>
-    <string name="style">Styled by Material Design</string>
-    <string name="content_description_about">关于</string>
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="menu_edit_channel">频道管理</string>
+    <string name="menu_history">历史记录</string>
+    <string name="menu_star_list">收藏列表</string>
+    <string name="menu_about">关于</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="editChannel">修改频道</string>
-    <string name="link">WEBSITE</string>
     <string name="menu_refresh">刷新</string>
-    <string name="history">历史记录</string>
-    <string name="edit_channel">频道管理</string>
+    <string name="menu_star">收藏</string>
+    <string name="menu_filter">筛选</string>
+    <string name="menu_open">在浏览器中查看</string>
+
+    <string name="channel_other">其它频道</string>
+    <string name="channel_mine">我的频道</string>
+    <string name="channel_edit">编辑</string>
+    <string name="channel_edit_tip">拖拽排序</string>
     <string name="channel_remove">移除</string>
     <string name="channel_add">添加</string>
+
+    <string name="text_style">Styled by Material Design</string>
+    <string name="link">WEBSITE</string>
+    <string name="text_show_result">点击展开搜索结果</string>
+    <string name="text_slide_to_show_more"><![CDATA[<< 滑动查看更多图片 >>]]></string>
+    <string name="text_result_count">约 %1$d 条结果</string>
+
+    <string name="holder_title">TITLE</string>
+    <string name="holder_category">CATEGORY</string>
+    <string name="holder_publish_time">Publish Time</string>
+    <string name="holder_publisher">Publisher</string>
+    <string name="holder_image">image</string>
+
+    <string name="holder_content">Content.</string>
+
+    <string name="filter_category">频道</string>
+    <string name="filter_from">从</string>
+    <string name="filter_to">到</string>
 </resources>
