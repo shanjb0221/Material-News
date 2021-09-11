@@ -2,6 +2,7 @@ package com.example.myapplication.channel_editor;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public int getMovementFlags(RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags;
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
         if (manager instanceof GridLayoutManager || manager instanceof StaggeredGridLayoutManager) {
@@ -28,7 +29,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 
         // 不同Type之间不可移动
         Log.e("Test", target.getItemViewType() + "");
@@ -48,7 +49,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
 
@@ -65,7 +66,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         if (viewHolder instanceof OnDragVHListener) {
             OnDragVHListener itemViewHolder = (OnDragVHListener) viewHolder;
             itemViewHolder.onItemFinish();
