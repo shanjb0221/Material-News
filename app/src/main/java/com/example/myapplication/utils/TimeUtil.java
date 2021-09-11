@@ -1,5 +1,6 @@
 package com.example.myapplication.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,9 +11,18 @@ import java.util.Locale;
  */
 public class TimeUtil {
 
+    public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     private static final long SECOND = 1000L;
     private static final long MINUTE = 60 * SECOND;
     private static final long HOUR = 60 * MINUTE;
+
+    public static String getCurrentTimeStr() {
+        return formatter.format(getCurrentTime());
+    }
+
+    public static Date getCurrentTime() {
+        return new Date(System.currentTimeMillis());
+    }
 
     // 将传入时间与当前时间进行对比，是否今天\昨天\前天\同一年
     public static String format(Date date) {
@@ -51,6 +61,18 @@ public class TimeUtil {
         if (sameYear)
             return new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(date);
         return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA).format(date);
+    }
+
+    public static String normalize(String input) {
+        if (input == null || input.equals("")) return null;
+        try {
+            Date date = formatter.parse(input);
+            if (date == null) return null;
+            return formatter.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 

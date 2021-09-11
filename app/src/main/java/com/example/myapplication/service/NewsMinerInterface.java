@@ -1,8 +1,7 @@
-package com.example.myapplication.news_service;
+package com.example.myapplication.service;
 
 import com.example.myapplication.bean.ResponseBean;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -17,7 +16,6 @@ import retrofit2.http.Query;
  *      &   categories = 科技
  *      &   page       = 1
  */
-
 
 public interface NewsMinerInterface {
     @GET("svc/news/queryNewsList")
