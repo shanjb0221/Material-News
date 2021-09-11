@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.SearchFragment">
+    tools:context=".fragment.StarFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:menu="@menu/search" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.roacult.backdrop.BackdropLayout
+        android:id="@+id/dropdown"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        app:animationDuration="400"
+        app:back_layout="@id/back"
+        app:disable_when_open="true"
+        app:front_header_radius="18dp"
+        app:front_layout="@id/front"
+        app:peekHeight="60dp">
 
-</FrameLayout>
+        <include
+            android:id="@+id/back"
+            layout="@layout/search_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/front"
+            layout="@layout/search_front"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.roacult.backdrop.BackdropLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
