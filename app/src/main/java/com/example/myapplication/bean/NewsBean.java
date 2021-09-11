@@ -1,34 +1,53 @@
-/**
- * Copyright 2021 bejson.com
- */
 package com.example.myapplication.bean;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
+
 import com.example.myapplication.utils.ImageUtil;
+import com.example.myapplication.utils.TimeUtil;
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Auto-generated: 2021-09-08 23:32:28
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
-public class NewsBean {
+@Entity(tableName = "news", indices = {
+        @Index(value = "newsID", unique = true),
+        @Index(value = "readTime"),
+        @Index(value = "star")
+})
+public class NewsBean implements Serializable {
+
+    @NonNull
+    @PrimaryKey
+    private String newsID = "";
 
     private String image;
-    @Expose(deserialize = false)
-    private List<String> images;
+    @TypeConverters(DateConverter.class)
     private Date publishTime;
     private String language;
     private String video;
     private String title;
     private String content;
     private String url;
-    private String newsID;
     private String publisher;
     private String category;
+
+    @Expose(deserialize = false)
+    private boolean star = false;
+    @TypeConverters(DateConverter.class)
+    @Expose(deserialize = false)
+    private Date readTime;
+
+    @Ignore
+    @Expose(deserialize = false)
+    private List<String> images;
 
     public String getImage() {
         return image;
@@ -86,11 +105,12 @@ public class NewsBean {
         this.url = url;
     }
 
+    @NonNull
     public String getNewsID() {
         return newsID;
     }
 
-    public void setNewsID(String newsID) {
+    public void setNewsID(@NonNull String newsID) {
         this.newsID = newsID;
     }
 
@@ -115,5 +135,42 @@ public class NewsBean {
             images = ImageUtil.split(image);
         }
         return images;
+    }
+
+    public boolean getStar() {
+        return star;
+    }
+
+    public void setStar(boolean star) {
+        this.star = star;
+    }
+
+    public Date getReadTime() {
+        return readTime;
+    }
+
+    public void setReadTime(Date readTime) {
+        this.readTime = readTime;
+    }
+
+    public void toggleStar() {
+        star = !star;
+    }
+
+    public static class DateConverter {
+        @TypeConverter
+        public String objectToString(Date date) {
+            if (date == null) return "";
+            return TimeUtil.formatter.format(date);
+        }
+
+        @TypeConverter
+        public Date stringToObject(String str) {
+            try {
+                return TimeUtil.formatter.parse(str);
+            } catch (ParseException e) {
+                return null;
+            }
+        }
     }
 }
