@@ -1,11 +1,9 @@
 package com.example.myapplication.fragment;
 
 import static com.example.myapplication.R.id.menu_about;
-import static com.example.myapplication.R.id.menu_editChannel;
-import static com.example.myapplication.R.id.menu_history;
+import static com.example.myapplication.R.id.menu_edit_channel;
 import static com.example.myapplication.R.id.menu_refresh;
 import static com.example.myapplication.R.id.menu_search;
-import static com.example.myapplication.R.id.menu_star;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,24 +11,26 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.widget.SearchView;
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.NewsListAdapter;
+import com.example.myapplication.bean.NewsBean;
 import com.example.myapplication.channel_editor.ChannelEditor;
 import com.example.myapplication.channel_editor.ChannelEntity;
 import com.example.myapplication.channel_pager.ChannelPager;
 import com.example.myapplication.constants.Constants;
 import com.example.myapplication.databinding.FragmentMainBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -42,9 +42,6 @@ public class MainFragment extends Fragment {
     private final int MODE_BUTTON = 0;
     private final int MODE_NAVIGATION_VIEW = 1;
     private final int MODE_TOP_APP_BAR = 2;
-    private final int FIXED = -1;
-    private final int MINE = 0;
-    private final int OTHER = 1;
     SharedPreferences channelSettings;
     List<ChannelEntity> mineChannels, otherChannels;
     int fixedChannels;
@@ -56,17 +53,19 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        channelSettings = getContext().getSharedPreferences(CHANNEL_SETTINGS, Context.MODE_PRIVATE);
+        channelSettings = requireContext().getSharedPreferences(CHANNEL_SETTINGS, Context.MODE_PRIVATE);
         loadChannels();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (B == null) {
             B = FragmentMainBinding.inflate(inflater, container, false);
             nav = NavHostFragment.findNavController(this);
-            setupTopAppBar();
+            AppBarConfiguration conf = new AppBarConfiguration.Builder(nav.getGraph()).setOpenableLayout(B.drawerLayout).build();
+            NavigationUI.setupWithNavController(B.toolbar, nav, conf);
+            setupToolBar();
             setupNavigationView();
             setupChannelPager();
             setupChannelEditor();
@@ -77,19 +76,41 @@ public class MainFragment extends Fragment {
     private void setupChannelEditor() {
         channelEditor = new ChannelEditor(getContext(), B.channelEditor, mineChannels, otherChannels, 4);
         channelEditor.getAdapter().setOnMyChannelItemClickListener((view, position) -> {
-            Snackbar.make(B.coordinatorLayout, "Channel: " + mineChannels.get(position).getName(), BaseTransientBottomBar.LENGTH_SHORT).show();
+            B.viewPager.setCurrentItem(position);
+            channelEditor.getBehavior().setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
         channelEditor.getAdapter().setChannelPagerAdapter(channelPager.getAdapter(), fixedChannels);
         channelEditor.getAdapter().setOnDatasetChangedListener(this::saveChannels);
+
     }
 
     private void setupChannelPager() {
-        B.editChannelButton.setOnClickListener(view -> navigateTo(menu_editChannel, MODE_BUTTON));
-        channelPager = new ChannelPager(this, B, mineChannels);
+        B.editChannelButton.setOnClickListener(view -> navigateTo(menu_edit_channel, MODE_BUTTON));
+        channelPager = new ChannelPager(this, B, mineChannels, new NewsListAdapter.OnNewsClickListener() {
+            @Override
+            public void onImageItemClick(NewsBean news) {
+                nav.navigate(MainFragmentDirections.actionMainFragmentToNewsDetailFragment(news));
+            }
+
+            @Override
+            public void onVideoItemClick(NewsBean news, int duration) {
+                MainFragmentDirections.ActionMainFragmentToNewsDetailFragment action = MainFragmentDirections.actionMainFragmentToNewsDetailFragment(news);
+                action.setDuration(duration);
+                nav.navigate(action);
+            }
+        });
     }
 
     private void setupNavigationView() {
-        B.navigationView.setNavigationItemSelectedListener(item -> navigateTo(item.getItemId(), MODE_NAVIGATION_VIEW));
+        B.navigationView.setNavigationItemSelectedListener(item ->
+                NavigationUI.onNavDestinationSelected(item, nav)
+                        || navigateTo(item.getItemId(), MODE_NAVIGATION_VIEW));
+    }
+
+    private void setupToolBar() {
+        B.toolbar.setOnMenuItemClickListener(item ->
+                NavigationUI.onNavDestinationSelected(item, nav)
+                        || navigateTo(item.getItemId(), MODE_TOP_APP_BAR));
     }
 
     private boolean navigateTo(int destination, int mode) {
@@ -100,21 +121,13 @@ public class MainFragment extends Fragment {
             nav.navigate(MainFragmentDirections.actionMainFragmentToSearchFragment());
             return true;
         }
-        if (destination == menu_editChannel) {
+        if (destination == menu_edit_channel) {
             channelEditor.getAdapter().resetEditingMode();
             channelEditor.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
             return true;
         }
-        if (destination == menu_star) {
-            nav.navigate(MainFragmentDirections.actionMainFragmentToStarFragment());
-            return true;
-        }
-        if (destination == menu_history) {
-            nav.navigate(MainFragmentDirections.actionMainFragmentToHistoryFragment());
-            return true;
-        }
         if (destination == menu_about) {
-            Snackbar.make(B.coordinatorLayout, R.string.style, Snackbar.LENGTH_SHORT)
+            Snackbar.make(B.coordinatorLayout, R.string.text_style, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.link, view -> {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://material.io/"));
                         requireContext().startActivity(intent);
@@ -124,7 +137,7 @@ public class MainFragment extends Fragment {
         if (destination == menu_refresh) {
             NewsListFragment cur = (NewsListFragment) getChildFragmentManager().findFragmentByTag("f" + B.viewPager.getCurrentItem());
             cur.getBinding().swipeRefreshLayout.setRefreshing(true);
-            cur.refresh();
+            cur.refresh(true);
             return true;
         }
         return false;
@@ -133,31 +146,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        saveChannels();
         B = null;
         nav = null;
-    }
-
-    private void setupTopAppBar() {
-        B.topAppBar.setNavigationOnClickListener(view -> B.drawerLayout.openDrawer(GravityCompat.START));
-
-        B.topAppBar.setOnMenuItemClickListener(item -> navigateTo(item.getItemId(), MODE_TOP_APP_BAR));
-
-        MenuItem search = B.topAppBar.getMenu().findItem(menu_search);
-        SearchView searchView = (SearchView) search.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Snackbar.make(B.coordinatorLayout, "Searching " + query, BaseTransientBottomBar.LENGTH_LONG).show();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
     }
 
     private void loadChannels() {

@@ -15,23 +15,21 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
+                android:id="@+id/toolbar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:menu="@menu/top_app_bar"
-                app:navigationIcon="@drawable/ic_menu_24"
-                app:title="@string/app_name" />
+                app:menu="@menu/main_top" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_scrollFlags="noScroll">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
@@ -40,13 +38,12 @@
                     android:layout_weight="1"
                     app:tabMode="auto" />
 
-
                 <Button
                     android:id="@+id/editChannelButton"
                     style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/editChannel"
+                    android:contentDescription="@string/menu_edit_channel"
                     android:longClickable="false"
                     app:icon="@drawable/ic_playlist_add_24" />
 
@@ -71,7 +68,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/header_navigation"
-        app:menu="@menu/navigation_drawer" />
+        app:headerLayout="@layout/app_header"
+        app:menu="@menu/main_side" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

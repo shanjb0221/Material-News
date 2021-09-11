@@ -9,6 +9,7 @@
         android:layout_height="96dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="48dp"
+        android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_material_logo" />
 
@@ -28,7 +29,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/style"
+        android:text="@string/text_style"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/material_on_surface_emphasis_medium" />
 

@@ -2,25 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_search"
+        android:id="@+id/searchFragment"
         android:icon="@drawable/ic_search_24"
         android:title="@string/menu_search" />
     <item
-        android:id="@+id/menu_editChannel"
+        android:id="@+id/menu_edit_channel"
         android:icon="@drawable/ic_playlist_add_24"
-        android:title="@string/edit_channel" />
+        android:title="@string/menu_edit_channel" />
 
     <item
-        android:id="@+id/menu_star"
+        android:id="@+id/starFragment"
         android:icon="@drawable/ic_star_24"
-        android:title="@string/star" />
+        android:title="@string/menu_star_list" />
     <item
-        android:id="@+id/menu_history"
+        android:id="@+id/historyFragment"
         android:icon="@drawable/ic_history_24"
-        android:title="@string/history" />
+        android:title="@string/menu_history" />
 
     <item
         android:id="@+id/menu_about"
         android:icon="@drawable/ic_info_24"
-        android:title="@string/about" />
+        android:title="@string/menu_about" />
 </menu>
