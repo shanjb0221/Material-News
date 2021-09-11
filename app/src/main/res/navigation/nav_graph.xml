@@ -7,53 +7,92 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.myapplication.fragment.MainFragment"
-        android:label="MainFragment">
+        android:label="Material 新闻">
         <action
             android:id="@+id/action_mainFragment_to_toolsFragment"
-            app:destination="@id/toolsFragment" />
+            app:destination="@id/toolsFragment"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
         <action
             android:id="@+id/action_mainFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_newsDetailFragment"
-            app:destination="@id/newsDetailFragment" />
+            app:destination="@id/searchFragment"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
         <action
             android:id="@+id/action_mainFragment_to_starFragment"
-            app:destination="@id/starFragment" />
+            app:destination="@id/starFragment"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
         <action
             android:id="@+id/action_mainFragment_to_historyFragment"
-            app:destination="@id/historyFragment" />
+            app:destination="@id/historyFragment"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
+        <action
+            android:id="@+id/action_mainFragment_to_newsDetailFragment"
+            app:destination="@id/newsDetailFragment"
+            app:enterAnim="@anim/my_fade_in"
+            app:exitAnim="@anim/my_fade_out"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
     </fragment>
     <fragment
         android:id="@+id/newsDetailFragment"
         android:name="com.example.myapplication.fragment.NewsDetailFragment"
-        android:label="NewsDetailFragment" />
+        android:label="新闻详情">
+        <argument
+            android:name="news"
+            app:argType="com.example.myapplication.bean.NewsBean" />
+        <argument
+            android:name="duration"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.myapplication.fragment.SearchFragment"
-        android:label="SearchFragment">
+        android:label="搜索">
         <action
             android:id="@+id/action_searchFragment_to_newsDetailFragment"
-            app:destination="@id/newsDetailFragment" />
+            app:destination="@id/newsDetailFragment"
+            app:enterAnim="@anim/my_fade_in"
+            app:exitAnim="@anim/my_fade_out"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
     </fragment>
     <fragment
         android:id="@+id/toolsFragment"
         android:name="com.example.myapplication.fragment.ToolsFragment"
-        android:label="ToolsFragment" />
+        android:label="设置" />
     <fragment
         android:id="@+id/starFragment"
         android:name="com.example.myapplication.fragment.StarFragment"
-        android:label="StarFragment">
+        android:label="收藏列表">
         <action
             android:id="@+id/action_starFragment_to_newsDetailFragment"
-            app:destination="@id/newsDetailFragment" />
+            app:destination="@id/newsDetailFragment"
+            app:enterAnim="@anim/my_fade_in"
+            app:exitAnim="@anim/my_fade_out"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.example.myapplication.fragment.HistoryFragment"
-        android:label="HistoryFragment">
+        android:label="历史记录">
         <action
             android:id="@+id/action_historyFragment_to_newsDetailFragment"
-            app:destination="@id/newsDetailFragment" />
+            app:destination="@id/newsDetailFragment"
+            app:enterAnim="@anim/my_fade_in"
+            app:exitAnim="@anim/my_fade_out"
+            app:popEnterAnim="@anim/my_fade_in"
+            app:popExitAnim="@anim/my_swipe_out" />
     </fragment>
+    <action
+        android:id="@+id/action_global_newsDetailFragment"
+        app:destination="@id/newsDetailFragment"
+        app:enterAnim="@anim/my_fade_in"
+        app:exitAnim="@anim/my_fade_out"
+        app:popEnterAnim="@anim/my_fade_in"
+        app:popExitAnim="@anim/my_swipe_out" />
 </navigation>
