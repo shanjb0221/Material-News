@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <item
+        android:id="@+id/menu_star"
+        android:icon="@drawable/ic_star_outline_24"
+        android:title="@string/menu_star"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_open"
+        android:icon="@drawable/ic_open_in_new_24"
+        android:title="@string/menu_open"
+        app:showAsAction="ifRoom" />
+
+</menu>
