@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:gravity="center"
-        android:text="其它频道"
+        android:text="@string/channel_other"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

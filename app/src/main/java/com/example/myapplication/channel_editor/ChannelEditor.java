@@ -12,34 +12,33 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.List;
 
 public class ChannelEditor {
-    private final Context context;
-    private final ChannelEditorBinding B;
     private final int spanCount;
     private final ChannelEditAdapter adapter;
     private final BottomSheetBehavior<LinearLayout> behavior;
 
     public ChannelEditor(Context context, ChannelEditorBinding binding, List<ChannelEntity> mine, List<ChannelEntity> other, int spanCount) {
-        this.context = context;
-        this.B = binding;
         this.spanCount = spanCount;
 
         GridLayoutManager manager = new GridLayoutManager(context, this.spanCount);
-        B.editorView.setLayoutManager(manager);
+        binding.editorView.setLayoutManager(manager);
         ItemDragHelperCallback callback = new ItemDragHelperCallback();
         ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(B.editorView);
+        helper.attachToRecyclerView(binding.editorView);
 
-        this.adapter = new ChannelEditAdapter(context, B.editorView, helper, mine, other, manager);
+        this.adapter = new ChannelEditAdapter(context, binding.editorView, helper, mine, other, manager);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return (adapter.getItemViewType(position) & ChannelEditAdapter.ITEM) == 1 ? 1 : ChannelEditor.this.spanCount;
             }
         });
-        B.editorView.setAdapter(adapter);
+        binding.editorView.setAdapter(adapter);
 
-        this.behavior = BottomSheetBehavior.from(B.bottomSheet);
-        B.closeButton.setOnClickListener(view -> behavior.setState(BottomSheetBehavior.STATE_COLLAPSED));
+        this.behavior = BottomSheetBehavior.from(binding.bottomSheet);
+        binding.closeButton.setOnClickListener(view -> {
+            adapter.resetEditingMode();
+            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
     }
 
     public ChannelEditAdapter getAdapter() {

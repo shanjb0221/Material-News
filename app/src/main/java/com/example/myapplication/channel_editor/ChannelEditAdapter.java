@@ -37,7 +37,6 @@ import com.example.myapplication.databinding.ChannelHeaderOtherBinding;
 import com.example.myapplication.databinding.ChannelItemMineBinding;
 import com.example.myapplication.databinding.ChannelItemOtherBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemMoveListener {
@@ -46,7 +45,6 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int ITEM = 1;
     public static final int MINE = 0;
     public static final int OTHER = 2;
-    public static final int ALL = 4;
     public static final int TYPE_HEADER_MINE = MINE | HEADER;
     public static final int TYPE_ITEM_MINE = MINE | ITEM;
     public static final int TYPE_HEADER_OTHER = OTHER | HEADER;
@@ -191,13 +189,12 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             dstView = manager.findViewByPosition(sizeMine() + 1);
             assert dstView != null;
             dstX = dstView.getLeft();
-            dstY = dstView.getTop();
         } else {
             dstView = manager.findViewByPosition(sizeMine());
             assert dstView != null;
             dstX = dstView.getRight();
-            dstY = dstView.getTop();
         }
+        dstY = dstView.getTop();
 
         // 如果在屏幕内, 则添加一个位移动画
         if (this.parent.indexOfChild(dstView) != -1) {
@@ -223,7 +220,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         assert holder instanceof BindingViewHolder;
-        BindingViewHolder h = (BindingViewHolder) holder;
+        BindingViewHolder<?> h = (BindingViewHolder<?>) holder;
         if (h.B instanceof ChannelHeaderMineBinding) {
             ChannelHeaderMineBinding b = (ChannelHeaderMineBinding) h.B;
             b.editButton.setText(isEditing ? "完成" : "编辑");
@@ -249,17 +246,6 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return sizeMine() + other.size() + 2;
-    }
-
-
-    public List<ChannelEntity> getChannels(int category) {
-        if (category == MINE) return mine;
-        if (category == OTHER) return other;
-        assert category == ALL;
-        List<ChannelEntity> res = new ArrayList<>();
-        res.addAll(mine);
-        res.addAll(other);
-        return res;
     }
 
     private void startAnimation(final View currentView, float dstX, float dstY) {
@@ -334,7 +320,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         /*
           我们要获取cache首先要通过setDrawingCacheEnable方法开启cache，然后再调用getDrawingCache方法就可以获得view的cache图片了。
          buildDrawingCache方法可以不用调用，因为调用getDrawingCache方法时，若果cache没有建立，系统会自动调用buildDrawingCache方法生成cache。
-         若想更新cache, 必须要调用destoryDrawingCache方法把旧的cache销毁，才能建立新的。
+         若想更新cache, 必须要调用destroyDrawingCache方法把旧的cache销毁，才能建立新的。
          当调用setDrawingCacheEnabled方法设置为false, 系统也会自动把原来的cache销毁。
          */
         view.destroyDrawingCache();
