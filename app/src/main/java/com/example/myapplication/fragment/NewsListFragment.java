@@ -1,153 +1,133 @@
 package com.example.myapplication.fragment;
 
-import static java.net.HttpURLConnection.HTTP_OK;
-
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.adapter.NewsListAdapter;
 import com.example.myapplication.bean.NewsBean;
-import com.example.myapplication.bean.ResponseBean;
-import com.example.myapplication.databinding.FragmentNewsListBinding;
-import com.example.myapplication.news_service.WebService;
+import com.example.myapplication.databinding.FragmentListBaseBinding;
+import com.example.myapplication.service.WebPager;
+import com.example.myapplication.video_player.ScrollCalculatorHelper;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.util.concurrent.FutureCallback;
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class NewsListFragment extends Fragment {
 
-    static final String TAG = "NewsListFragment";
-
-    private final String category;
-    private FragmentNewsListBinding B;
+    private final NewsListAdapter.OnNewsClickListener listener;
+    private final Map<String, String> params;
+    private FragmentListBaseBinding B;
     private NewsListAdapter adapter;
     private LinearLayoutManager manager;
-    private WebService.NewsPager newsPager;
-    public NewsListFragment(String category) {
-        this.category = category;
+    private WebPager pager = null;
+    private boolean requesting;
+    private ScrollCalculatorHelper helper;
+    private Executor executor;
+
+    public NewsListFragment(String category, NewsListAdapter.OnNewsClickListener listener) {
+        this.listener = listener;
+        params = new HashMap<>();
+        params.put("category", category);
     }
 
-    public FragmentNewsListBinding getBinding() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        executor = new Handler()::post;
+    }
+
+    @NonNull
+    public FragmentListBaseBinding getBinding() {
         return B;
     }
 
-    public void refresh() {
+    public void refresh(boolean showSuccess) {
+        if (requesting && showSuccess) return;
+        requesting = true;
         B.swipeRefreshLayout.setRefreshing(true);
-        newsPager = new WebService.NewsPager().setCategory(category);
-        newsPager.nextPage().enqueue(new Callback<ResponseBean>() {
+        pager = new WebPager(requireContext(), executor, params);
+        pager.nextPage(new FutureCallback<List<NewsBean>>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBean> call, @NonNull Response<ResponseBean> response) {
-                Log.e(TAG, "getItems(refresh): code = " + response.code());
-                if (response.code() != HTTP_OK) {
-                    B.swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(B.swipeRefreshLayout, "刷新失败！(网络错误)", BaseTransientBottomBar.LENGTH_LONG).show();
-                    return;
-                }
-                ResponseBean bean = response.body();
-                assert bean != null;
-                newsPager.setTotal(bean.getTotal());
-                adapter.replaceItems(bean.getData());
-
-                for (NewsBean item : bean.getData())
-                    Log.d(TAG, "img: " + item.getImage());
-
+            public void onSuccess(List<NewsBean> result) {
                 B.swipeRefreshLayout.setRefreshing(false);
-                Snackbar.make(B.swipeRefreshLayout, "刷新成功", Snackbar.LENGTH_SHORT).show();
-                if (!newsPager.hasNextPage())
-                    adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                requesting = false;
+                adapter.replaceItems(result);
+                if (showSuccess)
+                    Snackbar.make(B.swipeRefreshLayout, "刷新成功", Snackbar.LENGTH_SHORT).show();
+                if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBean> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Throwable t) {
                 B.swipeRefreshLayout.setRefreshing(false);
+                requesting = false;
                 Snackbar.make(B.swipeRefreshLayout, "刷新失败！(" + t.getMessage() + ")", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
     public void loadMore() {
-        if (newsPager == null) {
+        if (pager == null || requesting) {
             adapter.setLoaderStatus(NewsListAdapter.IDLE);
             return;
         }
-        newsPager.nextPage().enqueue(new Callback<ResponseBean>() {
+        requesting = true;
+        pager.nextPage(new FutureCallback<List<NewsBean>>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBean> call, @NonNull Response<ResponseBean> response) {
-                Log.e(TAG, "getItems(loadMore): code = " + response.code());
-                if (response.code() != HTTP_OK) {
-                    adapter.setLoaderStatus(NewsListAdapter.IDLE);
-                    Snackbar.make(B.swipeRefreshLayout, "加载失败！(网络错误)", BaseTransientBottomBar.LENGTH_LONG).show();
-                    return;
-                }
-                ResponseBean bean = response.body();
-                Log.e(TAG, "onResponse: \n" + bean);
-                assert bean != null;
-                adapter.appendItemsToBack(bean.getData());
-
-
-                for (NewsBean item : bean.getData()) {
-                    Log.d(TAG, "img: " + item.getImage());
-
-                }
-
+            public void onSuccess(List<NewsBean> result) {
                 adapter.setLoaderStatus(NewsListAdapter.IDLE);
-                Snackbar.make(B.swipeRefreshLayout, "加载了 " + bean.getData().size() + " 条", BaseTransientBottomBar.LENGTH_LONG).show();
-                if (!newsPager.hasNextPage())
-                    adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                requesting = false;
+                adapter.appendItemsToBack(result);
+                Snackbar.make(B.swipeRefreshLayout, "加载了 " + result.size() + " 条", BaseTransientBottomBar.LENGTH_LONG).show();
+                if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBean> call, @NonNull Throwable t) {
-                t.printStackTrace();
+            public void onFailure(@NonNull Throwable t) {
                 adapter.setLoaderStatus(NewsListAdapter.IDLE);
+                requesting = false;
                 Snackbar.make(B.swipeRefreshLayout, "加载失败！(" + t.getMessage() + ")", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (B == null) {
-            B = FragmentNewsListBinding.inflate(inflater, container, false);
+            B = FragmentListBaseBinding.inflate(inflater, container, false);
             List<NewsBean> items = new ArrayList<>();
-            adapter = new NewsListAdapter(this.getContext(), getLayoutInflater(), items);
+            adapter = new NewsListAdapter(this.getContext(), getLayoutInflater(), items, listener);
             manager = new LinearLayoutManager(this.getContext());
             B.recyclerView.setAdapter(adapter);
             B.recyclerView.setLayoutManager(manager);
             initListeners();
+            requesting = false;
+            refresh(false);
         }
         return B.getRoot();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        refresh();
-    }
-
     private void initListeners() {
         // refresh
-        B.swipeRefreshLayout.setOnRefreshListener(this::refresh);
+        B.swipeRefreshLayout.setOnRefreshListener(() -> refresh(true));
 
         // load more
         B.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -170,6 +150,31 @@ public class NewsListFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 lastVisibleItem = manager.findLastVisibleItemPosition();
+            }
+        });
+
+        // 视频自动播放
+        //限定范围为屏幕一半的上下偏移180
+        int height = CommonUtil.getScreenHeight(requireContext());
+        int delta = CommonUtil.dip2px(requireContext(), 180);
+        //自定播放帮助类
+        helper = new ScrollCalculatorHelper(R.id.video, height / 2 - delta, height / 2 + delta);
+
+        B.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int firstVisibleItem, lastVisibleItem;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                helper.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                firstVisibleItem = manager.findFirstVisibleItemPosition();
+                lastVisibleItem = manager.findLastVisibleItemPosition();
+                helper.onScroll(recyclerView, firstVisibleItem, lastVisibleItem);
             }
         });
 

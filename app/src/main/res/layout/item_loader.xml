@@ -12,7 +12,7 @@
         style=""
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
         android:indeterminate="false"
         android:indeterminateTint="@color/black" />
 
@@ -20,7 +20,7 @@
         android:id="@+id/loaderTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|left"
+        android:gravity="center_vertical|start"
         android:textSize="16sp" />
 
 </LinearLayout>
