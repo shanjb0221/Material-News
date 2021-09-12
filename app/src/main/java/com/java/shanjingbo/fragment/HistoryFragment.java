@@ -97,7 +97,6 @@ public class HistoryFragment extends Fragment {
     }
 
     public void refresh(boolean showSuccess) {
-        if (requesting && showSuccess) return;
         requesting = true;
         B.swipeRefreshLayout.setRefreshing(true);
         pager = new DBPager(requireContext(), executor, false);

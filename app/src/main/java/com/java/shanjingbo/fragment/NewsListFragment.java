@@ -59,7 +59,6 @@ public class NewsListFragment extends Fragment {
     }
 
     public void refresh(boolean showSuccess) {
-        if (requesting && showSuccess) return;
         requesting = true;
         B.swipeRefreshLayout.setRefreshing(true);
         pager = new WebPager(requireContext(), executor, params);
@@ -156,9 +155,8 @@ public class NewsListFragment extends Fragment {
         // 视频自动播放
         //限定范围为屏幕一半的上下偏移180
         int height = CommonUtil.getScreenHeight(requireContext());
-        int delta = CommonUtil.dip2px(requireContext(), 180);
         //自定播放帮助类
-        helper = new ScrollCalculatorHelper(R.id.video, height / 2 - delta, height / 2 + delta);
+        helper = new ScrollCalculatorHelper(R.id.video, 0, height);
 
         B.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int firstVisibleItem, lastVisibleItem;

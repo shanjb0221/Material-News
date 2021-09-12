@@ -245,7 +245,6 @@ public class SearchFragment extends Fragment {
     }
 
     public void refresh(boolean showSuccess) {
-        if (requesting && showSuccess) return;
         requesting = true;
         binding.front.title.setText("加载中...");
         B.swipeRefreshLayout.setRefreshing(true);
