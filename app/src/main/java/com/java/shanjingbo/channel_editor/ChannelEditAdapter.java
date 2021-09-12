@@ -287,8 +287,9 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mine.remove(index);
         other.add(0, item);
         notifyItemMoved(position, sizeMine() + 2);
-        if (channelPagerAdapter != null)
+        if (channelPagerAdapter != null) {
             channelPagerAdapter.notifyItemRemoved(index);
+        }
         if (datasetChangedListener != null) datasetChangedListener.onDatasetChanged();
     }
 
@@ -342,10 +343,7 @@ public class ChannelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void resetEditingMode() {
-        if (isEditing) {
-            isEditing = false;
-            notifyItemRangeChanged(0, sizeMine());
-        }
+        if (isEditing) changeEditingMode();
     }
 
     private void changeEditingMode() {

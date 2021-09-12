@@ -7,7 +7,6 @@ package com.java.shanjingbo.channel_editor;
 public class ChannelEntity {
 
     private final boolean fixed;
-    private long id;
     private String name;
 
     public ChannelEntity(String name) {
@@ -17,14 +16,6 @@ public class ChannelEntity {
     public ChannelEntity(String name, boolean fixed) {
         this.name = name;
         this.fixed = fixed;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
