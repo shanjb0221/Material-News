@@ -24,12 +24,20 @@ public class ChannelPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new NewsListFragment(channels.get(position).getName(), listener);
+        return new ListFragment(channels.get(position).getName(), listener);
     }
 
     @Override
     public long getItemId(int position) {
         return channels.get(position).getName().hashCode();
+    }
+
+    @Override
+    public boolean containsItem(long itemId) {
+        for (ChannelEntity item : channels)
+            if (item.getName().hashCode() == itemId)
+                return true;
+        return false;
     }
 
     @Override

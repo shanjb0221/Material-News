@@ -135,7 +135,10 @@ public class MainFragment extends Fragment {
             return true;
         }
         if (destination == menu_refresh) {
-            NewsListFragment cur = (NewsListFragment) getChildFragmentManager().findFragmentByTag("f" + B.viewPager.getCurrentItem());
+            ListFragment cur = (ListFragment) getChildFragmentManager()
+                    .findFragmentByTag("f" + mineChannels
+                            .get(B.viewPager.getCurrentItem())
+                            .getName().hashCode());
             cur.getBinding().swipeRefreshLayout.setRefreshing(true);
             cur.refresh(true);
             return true;
