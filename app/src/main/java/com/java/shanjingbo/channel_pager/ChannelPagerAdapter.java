@@ -28,6 +28,11 @@ public class ChannelPagerAdapter extends FragmentStateAdapter {
     }
 
     @Override
+    public long getItemId(int position) {
+        return channels.get(position).getName().hashCode();
+    }
+
+    @Override
     public int getItemCount() {
         return channels.size();
     }

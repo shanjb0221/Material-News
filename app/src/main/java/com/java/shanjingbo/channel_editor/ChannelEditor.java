@@ -35,10 +35,7 @@ public class ChannelEditor {
         binding.editorView.setAdapter(adapter);
 
         this.behavior = BottomSheetBehavior.from(binding.bottomSheet);
-        binding.closeButton.setOnClickListener(view -> {
-            adapter.resetEditingMode();
-            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        });
+        binding.closeButton.setOnClickListener(view -> behavior.setState(BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     public ChannelEditAdapter getAdapter() {
