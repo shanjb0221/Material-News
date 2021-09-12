@@ -1,4 +1,4 @@
-package com.java.shanjingbo.video_player;
+package com.java.shanjingbo.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -64,7 +64,7 @@ public class ScrollCalculatorHelper {
         int count = layoutManager.getChildCount();
         for (int i = 0; i < count; i++) {
             if (layoutManager.getChildAt(i) != null && layoutManager.getChildAt(i).findViewById(playId) != null) {
-                GSYBaseVideoPlayer player = (GSYBaseVideoPlayer) layoutManager.getChildAt(i).findViewById(playId);
+                GSYBaseVideoPlayer player = layoutManager.getChildAt(i).findViewById(playId);
                 Rect rect = new Rect();
                 player.getLocalVisibleRect(rect);
                 int height = player.getHeight();

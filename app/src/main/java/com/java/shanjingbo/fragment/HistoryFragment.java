@@ -24,8 +24,8 @@ import com.java.shanjingbo.adapter.NewsListAdapter;
 import com.java.shanjingbo.bean.NewsBean;
 import com.java.shanjingbo.databinding.FragmentListBaseBinding;
 import com.java.shanjingbo.databinding.FragmentListBinding;
-import com.java.shanjingbo.service.DBPager;
-import com.java.shanjingbo.video_player.ScrollCalculatorHelper;
+import com.java.shanjingbo.service.database.DBPager;
+import com.java.shanjingbo.utils.ScrollCalculatorHelper;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
 import java.util.ArrayList;

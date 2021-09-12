@@ -1,11 +1,11 @@
-package com.java.shanjingbo.service;
+package com.java.shanjingbo.service.database;
 
 import android.content.Context;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.java.shanjingbo.bean.NewsBean;
-import com.java.shanjingbo.dao.NewsDao;
+import com.java.shanjingbo.service.AbstractPager;
 
 import java.util.List;
 import java.util.concurrent.Executor;

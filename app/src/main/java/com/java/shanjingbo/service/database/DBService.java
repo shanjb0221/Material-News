@@ -1,19 +1,20 @@
-package com.java.shanjingbo.service;
+package com.java.shanjingbo.service.database;
 
 import android.content.Context;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.java.shanjingbo.bean.NewsBean;
-import com.java.shanjingbo.dao.NewsDao;
-import com.java.shanjingbo.database.NewsDB;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class DBService {
     private static final String TAG = "DB";
     private static DBService instance;
 
-    final NewsDao dao;
+    public final NewsDao dao;
 
     private DBService(Context context) {
         dao = NewsDB.getInstance(context).getNewsDao();
@@ -30,6 +31,10 @@ public class DBService {
 
     public void delete(NewsBean bean) {
         new Thread(() -> dao.delete(bean)).start();
+    }
+
+    public void clear(Executor executor, FutureCallback<Integer> callback) {
+        Futures.addCallback(dao.deleteAll(), callback, executor);
     }
 
     public ListenableFuture<List<NewsBean>> fetch() {

@@ -1,4 +1,4 @@
-package com.java.shanjingbo.service;
+package com.java.shanjingbo.service.web;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
@@ -10,6 +10,8 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.java.shanjingbo.bean.NewsBean;
 import com.java.shanjingbo.bean.ResponseBean;
+import com.java.shanjingbo.service.AbstractPager;
+import com.java.shanjingbo.service.database.DBService;
 import com.java.shanjingbo.utils.TimeUtil;
 
 import java.io.IOException;

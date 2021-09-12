@@ -1,4 +1,4 @@
-package com.java.shanjingbo.dao;
+package com.java.shanjingbo.service.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -40,6 +40,9 @@ public abstract class NewsDao {
 
     @Delete
     public abstract void delete(NewsBean bean);
+
+    @Query("DELETE FROM news")
+    public abstract ListenableFuture<Integer> deleteAll();
 
     @Query("SELECT * FROM news WHERE newsID = :id LIMIT 1")
     public abstract NewsBean findById(String id);

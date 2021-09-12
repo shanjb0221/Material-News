@@ -1,4 +1,4 @@
-package com.java.shanjingbo.database;
+package com.java.shanjingbo.service.database;
 
 import android.content.Context;
 
@@ -7,7 +7,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.java.shanjingbo.bean.NewsBean;
-import com.java.shanjingbo.dao.NewsDao;
 
 @Database(entities = {NewsBean.class}, version = 1, exportSchema = false)
 public abstract class NewsDB extends RoomDatabase {

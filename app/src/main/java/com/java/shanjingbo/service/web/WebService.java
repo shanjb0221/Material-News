@@ -1,4 +1,4 @@
-package com.java.shanjingbo.service;
+package com.java.shanjingbo.service.web;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -16,7 +16,7 @@ public class WebService {
     private static final String TAG = "Web";
     private static final WebService instance = new WebService();
     final Retrofit retrofit;
-    final NewsMinerInterface service;
+    final WebInterface service;
     final Gson formatter;
     final ListeningExecutorService executorService;
 
@@ -34,7 +34,7 @@ public class WebService {
                 .create();
         retrofit = new Retrofit.Builder().baseUrl(Constants.baseURL)
                 .addConverterFactory(GsonConverterFactory.create(formatter)).build();
-        service = retrofit.create(NewsMinerInterface.class);
+        service = retrofit.create(WebInterface.class);
         executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 

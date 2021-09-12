@@ -19,8 +19,8 @@ import com.java.shanjingbo.R;
 import com.java.shanjingbo.adapter.NewsListAdapter;
 import com.java.shanjingbo.bean.NewsBean;
 import com.java.shanjingbo.databinding.FragmentListBaseBinding;
-import com.java.shanjingbo.service.WebPager;
-import com.java.shanjingbo.video_player.ScrollCalculatorHelper;
+import com.java.shanjingbo.service.web.WebPager;
+import com.java.shanjingbo.utils.ScrollCalculatorHelper;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-public class NewsListFragment extends Fragment {
+public class ListFragment extends Fragment {
 
     private final NewsListAdapter.OnNewsClickListener listener;
     private final Map<String, String> params;
@@ -41,7 +41,7 @@ public class NewsListFragment extends Fragment {
     private ScrollCalculatorHelper helper;
     private Executor executor;
 
-    public NewsListFragment(String category, NewsListAdapter.OnNewsClickListener listener) {
+    public ListFragment(String category, NewsListAdapter.OnNewsClickListener listener) {
         this.listener = listener;
         params = new HashMap<>();
         params.put("category", category);

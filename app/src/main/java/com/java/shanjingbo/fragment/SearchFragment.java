@@ -40,9 +40,9 @@ import com.java.shanjingbo.databinding.FragmentListBaseBinding;
 import com.java.shanjingbo.databinding.FragmentSearchBinding;
 import com.java.shanjingbo.databinding.SearchBackBinding;
 import com.java.shanjingbo.databinding.SearchFrontBinding;
-import com.java.shanjingbo.service.WebPager;
+import com.java.shanjingbo.service.web.WebPager;
+import com.java.shanjingbo.utils.ScrollCalculatorHelper;
 import com.java.shanjingbo.utils.TimeUtil;
-import com.java.shanjingbo.video_player.ScrollCalculatorHelper;
 import com.roacult.backdrop.BackdropLayout.State;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
@@ -173,7 +173,7 @@ public class SearchFragment extends Fragment {
         view.setIconified(false);
         view.requestFocusFromTouch();
         view.setQueryHint("搜索");
-        EditText editText = (EditText) view.findViewById(androidx.appcompat.R.id.search_src_text);
+        EditText editText = view.findViewById(androidx.appcompat.R.id.search_src_text);
         editText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.material_on_primary_disabled));
         editText.setTextColor(ContextCompat.getColor(requireContext(), R.color.design_default_color_on_primary));
         editText.requestFocus();

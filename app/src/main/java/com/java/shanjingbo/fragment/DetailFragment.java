@@ -27,8 +27,8 @@ import com.java.shanjingbo.R;
 import com.java.shanjingbo.adapter.ImagesAdapter;
 import com.java.shanjingbo.bean.NewsBean;
 import com.java.shanjingbo.databinding.FragmentNewsDetailBinding;
-import com.java.shanjingbo.service.DBService;
 import com.java.shanjingbo.service.ImageService;
+import com.java.shanjingbo.service.database.DBService;
 import com.java.shanjingbo.utils.ImageUtil;
 import com.java.shanjingbo.utils.TimeUtil;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -37,7 +37,7 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 import java.util.List;
 
-public class NewsDetailFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
     private static final String TAG = "NewsDetail";
 
@@ -58,8 +58,8 @@ public class NewsDetailFragment extends Fragment {
                     B.toolbar, nav, conf);
             videoBuilder = new GSYVideoOptionBuilder();
         }
-        bean = NewsDetailFragmentArgs.fromBundle(getArguments()).getNews();
-        int duration = NewsDetailFragmentArgs.fromBundle(getArguments()).getDuration();
+        bean = DetailFragmentArgs.fromBundle(getArguments()).getNews();
+        int duration = DetailFragmentArgs.fromBundle(getArguments()).getDuration();
 
         saveToDB(bean);
 

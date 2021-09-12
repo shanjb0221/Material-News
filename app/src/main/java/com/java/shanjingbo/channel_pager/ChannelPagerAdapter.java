@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.java.shanjingbo.adapter.NewsListAdapter;
 import com.java.shanjingbo.channel_editor.ChannelEntity;
-import com.java.shanjingbo.fragment.NewsListFragment;
+import com.java.shanjingbo.fragment.ListFragment;
 
 import java.util.List;
 

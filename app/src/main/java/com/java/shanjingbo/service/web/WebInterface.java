@@ -1,4 +1,4 @@
-package com.java.shanjingbo.service;
+package com.java.shanjingbo.service.web;
 
 import com.java.shanjingbo.bean.ResponseBean;
 
@@ -17,7 +17,7 @@ import retrofit2.http.Query;
  *      &   page       = 1
  */
 
-public interface NewsMinerInterface {
+public interface WebInterface {
     @GET("svc/news/queryNewsList")
     Call<ResponseBean> getPage(@Query("size") int size,
                                @Query("page") int page,
