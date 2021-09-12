@@ -109,6 +109,7 @@ public class HistoryFragment extends Fragment {
                 if (showSuccess)
                     Snackbar.make(B.swipeRefreshLayout, "刷新成功", Snackbar.LENGTH_SHORT).show();
                 if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                else adapter.setLoaderStatus(NewsListAdapter.IDLE);
             }
 
             @Override
@@ -129,13 +130,11 @@ public class HistoryFragment extends Fragment {
         pager.nextPage(new FutureCallback<List<NewsBean>>() {
             @Override
             public void onSuccess(List<NewsBean> result) {
-                adapter.setLoaderStatus(NewsListAdapter.IDLE);
                 requesting = false;
                 adapter.appendItemsToBack(result);
                 Snackbar.make(B.swipeRefreshLayout, "加载了 " + result.size() + " 条", Snackbar.LENGTH_SHORT).show();
-                if (pager.isLastPage()) {
-                    adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
-                }
+                if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                else adapter.setLoaderStatus(NewsListAdapter.IDLE);
             }
 
             @Override

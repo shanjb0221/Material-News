@@ -182,6 +182,7 @@ public class SearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 params.put("keyword", query);
                 binding.dropdown.close();
+                closeKeyBoard();
                 refresh(false);
                 return true;
             }
@@ -254,11 +255,12 @@ public class SearchFragment extends Fragment {
             public void onSuccess(List<NewsBean> result) {
                 B.swipeRefreshLayout.setRefreshing(false);
                 requesting = false;
-                binding.front.title.setText(getString(R.string.text_result_count, pager.getCount()));
+                binding.front.title.setText("约 " + pager.getCount() + " 条结果");
                 adapter.replaceItems(result);
                 if (showSuccess)
                     Snackbar.make(B.swipeRefreshLayout, "刷新成功", Snackbar.LENGTH_SHORT).show();
                 if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                else adapter.setLoaderStatus(NewsListAdapter.IDLE);
             }
 
             @Override
@@ -279,11 +281,11 @@ public class SearchFragment extends Fragment {
         pager.nextPage(new FutureCallback<List<NewsBean>>() {
             @Override
             public void onSuccess(List<NewsBean> result) {
-                adapter.setLoaderStatus(NewsListAdapter.IDLE);
                 requesting = false;
                 adapter.appendItemsToBack(result);
                 Snackbar.make(B.swipeRefreshLayout, "加载了 " + result.size() + " 条", BaseTransientBottomBar.LENGTH_LONG).show();
                 if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
+                else adapter.setLoaderStatus(NewsListAdapter.IDLE);
             }
 
             @Override
