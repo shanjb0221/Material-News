@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Material News</string>
+    <string name="app_name">Material 新闻</string>
+    <string name="app_author">Developed by shanjb0221</string>
+    <string name="app_style">Styled by Material Design</string>
 
     <string name="menu_search">搜索</string>
     <string name="menu_edit_channel">频道管理</string>
@@ -19,7 +21,6 @@
     <string name="channel_remove">移除</string>
     <string name="channel_add">添加</string>
 
-    <string name="text_style">Styled by Material Design</string>
     <string name="link">WEBSITE</string>
     <string name="text_show_result">点击展开搜索结果</string>
     <string name="text_slide_to_show_more"><![CDATA[<< 滑动查看更多图片 >>]]></string>
@@ -36,4 +37,5 @@
     <string name="filter_category">频道</string>
     <string name="filter_from">从</string>
     <string name="filter_to">到</string>
+    <string name="menu_clear">清空记录</string>
 </resources>

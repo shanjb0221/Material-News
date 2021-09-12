@@ -9,11 +9,6 @@
         android:name="com.java.shanjingbo.fragment.MainFragment"
         android:label="Material 新闻">
         <action
-            android:id="@+id/action_mainFragment_to_toolsFragment"
-            app:destination="@id/toolsFragment"
-            app:popEnterAnim="@anim/my_fade_in"
-            app:popExitAnim="@anim/my_swipe_out" />
-        <action
             android:id="@+id/action_mainFragment_to_searchFragment"
             app:destination="@id/searchFragment"
             app:popEnterAnim="@anim/my_fade_in"
@@ -38,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/newsDetailFragment"
-        android:name="com.java.shanjingbo.fragment.NewsDetailFragment"
+        android:name="com.java.shanjingbo.fragment.DetailFragment"
         android:label="新闻详情">
         <argument
             android:name="news"
@@ -60,10 +55,6 @@
             app:popEnterAnim="@anim/my_fade_in"
             app:popExitAnim="@anim/my_swipe_out" />
     </fragment>
-    <fragment
-        android:id="@+id/toolsFragment"
-        android:name="com.java.shanjingbo.fragment.ToolsFragment"
-        android:label="设置" />
     <fragment
         android:id="@+id/starFragment"
         android:name="com.java.shanjingbo.fragment.StarFragment"
