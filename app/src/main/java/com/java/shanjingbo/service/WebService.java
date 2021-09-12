@@ -1,9 +1,13 @@
 package com.java.shanjingbo.service;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.java.shanjingbo.constants.Constants;
+
+import java.util.concurrent.Executors;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -14,6 +18,7 @@ public class WebService {
     final Retrofit retrofit;
     final NewsMinerInterface service;
     final Gson formatter;
+    final ListeningExecutorService executorService;
 
     private WebService() {
         formatter = new GsonBuilder()
@@ -30,6 +35,7 @@ public class WebService {
         retrofit = new Retrofit.Builder().baseUrl(Constants.baseURL)
                 .addConverterFactory(GsonConverterFactory.create(formatter)).build();
         service = retrofit.create(NewsMinerInterface.class);
+        executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
     public static WebService getInstance() {

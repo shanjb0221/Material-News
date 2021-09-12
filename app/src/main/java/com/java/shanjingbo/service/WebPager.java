@@ -7,6 +7,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.java.shanjingbo.bean.NewsBean;
 import com.java.shanjingbo.bean.ResponseBean;
 import com.java.shanjingbo.utils.TimeUtil;
@@ -59,14 +60,16 @@ public class WebPager extends AbstractPager {
                             return;
                         }
                         if (count == -1) count = response.body().getTotal();
-                        List<NewsBean> items = response.body().getData();
-                        for (NewsBean item : items) {
-                            NewsBean bean = db.dao.findById(item.getNewsID());
-                            if (bean == null) continue;
-                            item.setReadTime(bean.getReadTime());
-                            item.setStar(bean.getStar());
-                        }
-                        callback.onSuccess(items);
+                        Futures.addCallback(WebService.getInstance().executorService.submit(() -> {
+                            List<NewsBean> items = response.body().getData();
+                            for (NewsBean item : items) {
+                                NewsBean bean = db.dao.findById(item.getNewsID());
+                                if (bean == null) continue;
+                                item.setReadTime(bean.getReadTime());
+                                item.setStar(bean.getStar());
+                            }
+                            return items;
+                        }), callback, executor);
                     }
 
                     @Override
