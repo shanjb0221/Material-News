@@ -1,11 +1,9 @@
 package com.java.shanjingbo.service.database;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.java.shanjingbo.bean.NewsBean;
@@ -34,12 +32,6 @@ public abstract class NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert(NewsBean bean);
-
-    @Update
-    public abstract void update(NewsBean bean);
-
-    @Delete
-    public abstract void delete(NewsBean bean);
 
     @Query("DELETE FROM news")
     public abstract ListenableFuture<Integer> deleteAll();

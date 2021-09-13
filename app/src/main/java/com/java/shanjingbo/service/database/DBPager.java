@@ -13,7 +13,7 @@ import java.util.concurrent.Executor;
 public class DBPager extends AbstractPager {
     private final NewsDao dao;
     private final Executor executor;
-    private boolean star = false;
+    private final boolean star;
 
     public DBPager(Context context, Executor executor, boolean star) {
         this.dao = DBService.getInstance(context).dao;

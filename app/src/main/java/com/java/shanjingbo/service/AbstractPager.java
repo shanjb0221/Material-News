@@ -7,7 +7,9 @@ import com.java.shanjingbo.constants.Constants;
 import java.util.List;
 
 public abstract class AbstractPager {
-    protected int curPage, count, pageSize;
+    protected final int pageSize;
+    protected int curPage;
+    protected int count;
 
     public AbstractPager(int pageSize) {
         this.pageSize = pageSize;

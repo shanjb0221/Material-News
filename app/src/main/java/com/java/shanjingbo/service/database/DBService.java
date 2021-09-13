@@ -29,10 +29,6 @@ public class DBService {
         new Thread(() -> dao.insert(bean)).start();
     }
 
-    public void delete(NewsBean bean) {
-        new Thread(() -> dao.delete(bean)).start();
-    }
-
     public void clear(Executor executor, FutureCallback<Integer> callback) {
         Futures.addCallback(dao.deleteAll(), callback, executor);
     }
@@ -40,14 +36,4 @@ public class DBService {
     public ListenableFuture<List<NewsBean>> fetch() {
         return dao.getAll();
     }
-
-    public void update(NewsBean bean) {
-        new Thread(() -> dao.update(bean)).start();
-    }
-
-    public interface OnSyncSuccessListener {
-        void onSuccess();
-    }
-
-
 }
