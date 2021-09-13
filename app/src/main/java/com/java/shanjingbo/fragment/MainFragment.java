@@ -188,8 +188,7 @@ public class MainFragment extends Fragment {
                     .findFragmentByTag("f" + mineChannels
                             .get(B.viewPager.getCurrentItem())
                             .getName().hashCode());
-            cur.getBinding().swipeRefreshLayout.setRefreshing(true);
-            cur.refresh(mode == MODE_TOP_APP_BAR);
+            cur.onRefresh(mode == MODE_TOP_APP_BAR);
             return true;
         }
         return false;
