@@ -103,10 +103,12 @@ public class StarFragment extends Fragment {
             @Override
             public void onSuccess(List<NewsBean> result) {
                 B.swipeRefreshLayout.setRefreshing(false);
+                B.recyclerView.scrollToPosition(0);
                 requesting = false;
                 adapter.replaceItems(result);
-                if (showSuccess)
+                if (showSuccess) {
                     Snackbar.make(B.swipeRefreshLayout, "刷新成功", Snackbar.LENGTH_SHORT).show();
+                }
                 if (pager.isLastPage()) adapter.setLoaderStatus(NewsListAdapter.NO_MORE);
                 else adapter.setLoaderStatus(NewsListAdapter.IDLE);
             }

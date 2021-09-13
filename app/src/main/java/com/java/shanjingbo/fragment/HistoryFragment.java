@@ -104,6 +104,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onSuccess(List<NewsBean> result) {
                 B.swipeRefreshLayout.setRefreshing(false);
+                B.recyclerView.scrollToPosition(0);
                 requesting = false;
                 adapter.replaceItems(result);
                 if (showSuccess)
